@@ -45,3 +45,17 @@ yarn ios
 If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
 
 This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+
+## Step 3: Install Required Dependencies
+
+We'll need some additional packages for handling calls and making network requests:
+
+```bash
+# React Native dependencies
+npm install react-native-callkeep axios
+
+# iOS-specific setup for react-native-callkeep
+cd ios
+pod install
+cd ..
+```

@@ -1,8 +1,11 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+
 
 # Getting Started
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+>**Note**: Make sure you have completed the [React Native - Environment Setup]
+
+For React Native - Environment Setup in Mac follow this (https://zahiralam.com/blog/react-native-build-ios-android-mac/) .
+For React Native - Environment Setup in Ubuntu follow this (https://zahiralam.com/blog/how-to-install-android-studio-on-ubuntu-24-04-a-step-by-step-guide/)
 
 ## Step 1: Start the Metro Server
 

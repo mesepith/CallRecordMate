@@ -48,5 +48,11 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-</dict>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Your call recording app needs access to the microphone</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>voip</string>
+	</array>
+	</dict>
 </plist>

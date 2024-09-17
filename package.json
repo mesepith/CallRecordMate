@@ -10,8 +10,10 @@
     "test": "jest"
   },
   "dependencies": {
+    "axios": "^1.7.7",
     "react": "18.3.1",
-    "react-native": "0.75.3"
+    "react-native": "0.75.3",
+    "react-native-callkeep": "^4.3.14"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

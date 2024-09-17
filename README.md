@@ -63,3 +63,18 @@ cd ios
 pod install
 cd ..
 ```
+
+## Step 4: Configure react-native-callkeep for iOS
+
+To handle incoming and outgoing calls on iOS, we use react-native-callkeep. This requires some configuration:
+
+Navigate to the ios/CallRecordMate/Info.plist file and add the following permissions:
+
+```bash
+<key>NSMicrophoneUsageDescription</key>
+<string>Your call recording app needs access to the microphone</string>
+<key>UIBackgroundModes</key>
+<array>
+    <string>voip</string>
+</array>
+```

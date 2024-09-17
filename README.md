@@ -68,7 +68,7 @@ cd ..
 
 To handle incoming and outgoing calls on iOS, we use react-native-callkeep. This requires some configuration:
 
-Navigate to the ios/CallRecordMate/Info.plist file and add the following permissions:
+1. Navigate to the ios/CallRecordMate/Info.plist file and add the following permissions:
 
 ```bash
 <key>NSMicrophoneUsageDescription</key>
@@ -77,4 +77,27 @@ Navigate to the ios/CallRecordMate/Info.plist file and add the following permiss
 <array>
     <string>voip</string>
 </array>
+```
+2. Register CallKeep in your AppDelegate:
+Open ios/CallRecordMate/AppDelegate.h
+Add the following imports at the top:
+
+```bash
+#import <RNCallKeep.h> // Add this line at top
+```
+
+3. You'll need to initialize CallKeep within application:didFinishLaunchingWithOptions:. Insert the RNCallKeep setup inside this method.
+Open ios/CallRecordMate/AppDelegate.mm 
+
+```bash
+#import <RNCallKeep.h> // Add this line at top here also
+```
+
+```bash
+// Initialize CallKeep
+  [RNCallKeep setup:@{
+      @"appName": @"CallRecordMate",
+      @"maximumCallGroups": @1, // Optional: Set your maximum call groups
+      @"maximumCallsPerCallGroup": @1 // Optional: Set your maximum calls per group
+  }];
 ```

@@ -5,6 +5,7 @@
 >**Note**: Make sure you have completed the [React Native - Environment Setup]
 
 For React Native - Environment Setup in Mac follow this (https://zahiralam.com/blog/react-native-build-ios-android-mac/) .
+
 For React Native - Environment Setup in Ubuntu follow this (https://zahiralam.com/blog/how-to-install-android-studio-on-ubuntu-24-04-a-step-by-step-guide/)
 
 ## Step 1: Start the Metro Server

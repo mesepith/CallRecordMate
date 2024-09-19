@@ -129,6 +129,11 @@ iOS: In the Info.plist file, add a permission string to explain why you need acc
 <string>This app needs access to your contacts to initiate calls.</string>
 ```
 
+Android: In the AndroidManifest.xml file, add the required permission:
+
+```bash
+<uses-permission android:name="android.permission.READ_CONTACTS" />
+```
 
 ```bash
 ```

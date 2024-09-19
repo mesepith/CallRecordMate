@@ -101,3 +101,34 @@ Open ios/CallRecordMate/AppDelegate.mm
       @"maximumCallsPerCallGroup": @1 // Optional: Set your maximum calls per group
   }];
 ```
+
+## Step 5: Access Mobile Contact
+
+1. Install the react-native-contacts Package for iOS
+
+ install the react-native-contacts package to interact with the device's contact list.
+
+```bash
+npm install react-native-contacts
+```
+
+# Link the package and install pods:
+
+```bash
+cd ios
+pod install
+cd ..
+```
+
+2. Request Permissions to Access Contacts:
+
+iOS: In the Info.plist file, add a permission string to explain why you need access to the user's contacts:
+
+```bash
+<key>NSContactsUsageDescription</key>
+<string>This app needs access to your contacts to initiate calls.</string>
+```
+
+
+```bash
+```

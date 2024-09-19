@@ -13,25 +13,42 @@ export default function App() {
   const [selectedContactId, setSelectedContactId] = useState(null); // State to track the selected contact
   const buttonOpacity = useRef(new Animated.Value(0)).current; // Animated value for button opacity
 
-  // Fetch contacts on component mount
-  useEffect(() => {
-    // Request permission to access contacts
+  // Fetch contacts when permission is granted
+  const fetchContacts = () => {
+    Contacts.getAll()
+      .then(contacts => {
+        // Sort contacts by name
+        const sortedContacts = contacts.sort((a, b) => 
+          (a.givenName + ' ' + a.familyName).localeCompare(b.givenName + ' ' + b.familyName)
+        );
+        setContacts(sortedContacts);
+        setFilteredContacts(sortedContacts); // Initialize filtered contacts
+      })
+      .catch(error => {
+        console.error('Error fetching contacts', error);
+      });
+  };
+
+  // Request permission and fetch contacts
+  const requestContactsPermission = () => {
     Contacts.requestPermission().then(permission => {
       if (permission === 'authorized') {
-        Contacts.getAll()
-          .then(contacts => {
-            // Sort contacts by name
-            const sortedContacts = contacts.sort((a, b) => 
-              (a.givenName + ' ' + a.familyName).localeCompare(b.givenName + ' ' + b.familyName)
-            );
-            setContacts(sortedContacts);
-            setFilteredContacts(sortedContacts); // Initialize filtered contacts
-          })
-          .catch(error => {
-            console.error('Error fetching contacts', error);
-          });
+        fetchContacts(); // Fetch contacts immediately after permission is granted
       } else {
         alert('Permission to access contacts was denied');
+      }
+    });
+  };
+
+  // UseEffect to request permission on component mount
+  useEffect(() => {
+    Contacts.checkPermission().then(permission => {
+      if (permission === 'authorized') {
+        fetchContacts(); // If permission is already granted, fetch contacts
+      } else if (permission === 'undefined') {
+        requestContactsPermission(); // Request permission if it's undefined
+      } else if (permission === 'denied') {
+        alert('Permission to access contacts was denied. Please enable it in settings.');
       }
     });
   }, []);

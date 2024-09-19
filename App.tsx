@@ -53,25 +53,72 @@ export default function App() {
     });
   }, []);
 
+ 
   // Filter contacts based on search text
-  const filterContacts = (text) => {
-    setSearchText(text);
-    if (text) {
-      const filtered = contacts.filter(contact => {
-        const contactName = (contact.givenName + ' ' + contact.familyName).toLowerCase();
-        const contactPhone = contact.phoneNumbers.map(phone => normalizePhoneNumber(phone.number)).join(' ');
-        return contactName.includes(text.toLowerCase()) || contactPhone.includes(normalizePhoneNumber(text));
-      });
-      setFilteredContacts(filtered);
-    } else {
-      setFilteredContacts(contacts);
-    }
-  };
+const filterContacts = (text) => {
+  setSearchText(text);
 
-  // Normalize phone number by removing non-numeric characters
-  const normalizePhoneNumber = (number) => {
-    return number.replace(/\D/g, ''); // Remove all non-numeric characters
-  };
+  if (text) {
+    // Normalize the search text to lowercase for name searching
+    const lowerCaseText = text.toLowerCase();
+
+    // Normalize the search text for phone number searching
+    const normalizedSearchText = text.replace(/\D/g, '');
+
+    // Debugging: Log search text and normalized search text
+    console.log('Searching for (name):', lowerCaseText);
+    console.log('Searching for (phone):', normalizedSearchText);
+
+    const filtered = contacts.filter(contact => {
+      // Create a full name by combining givenName and familyName
+      const fullName = `${contact.givenName} ${contact.familyName || ''}`.toLowerCase().trim();
+
+      // Debugging: Log the contact name being checked
+      console.log('Checking contact name:', fullName);
+
+      // Check if the contact's full name includes the search text
+      const nameMatch = fullName.includes(lowerCaseText);
+
+      // Normalize phone numbers to remove spaces and other non-numeric characters
+      const contactPhoneNumbers = contact.phoneNumbers.map(phone => {
+        const normalizedPhone = normalizePhoneNumber(phone.number);
+        
+        // Debugging: Log the normalized phone number
+        console.log('Checking contact phone number:', normalizedPhone);
+
+        return normalizedPhone;
+      }).join(' ');
+
+      // Check if the contact phone numbers include the numeric search text
+      const phoneMatch = contactPhoneNumbers.includes(normalizedSearchText);
+
+      // Debugging: Log match results
+      if (nameMatch) {
+        console.log('Name match found:', fullName);
+      }
+      if (phoneMatch) {
+        console.log('Phone match found:', contactPhoneNumbers);
+      }
+
+      return nameMatch || (normalizedSearchText !== '' && phoneMatch);
+    });
+
+    setFilteredContacts(filtered);
+
+    // Debugging: Log the filtered contacts count
+    console.log('Filtered contacts count:', filtered.length);
+  } else {
+    // Reset to the full contacts list if the search text is empty
+    setFilteredContacts(contacts);
+  }
+};
+
+// Normalize phone number by removing non-numeric characters
+const normalizePhoneNumber = (number) => {
+  return number.replace(/\D/g, ''); // Remove all non-numeric characters
+};
+
+
 
   const startCall = () => {
     if (phoneNumber) {

@@ -6,6 +6,8 @@ import axios from 'axios';
 export default function App() {
   const IP = '42.108.74.159'; // Your backend IP
   const [contacts, setContacts] = useState([]);
+  const [filteredContacts, setFilteredContacts] = useState([]);
+  const [searchText, setSearchText] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
 
   // Fetch contacts on component mount
@@ -15,7 +17,12 @@ export default function App() {
       if (permission === 'authorized') {
         Contacts.getAll()
           .then(contacts => {
-            setContacts(contacts);
+            // Sort contacts by name
+            const sortedContacts = contacts.sort((a, b) => 
+              (a.givenName + ' ' + a.familyName).localeCompare(b.givenName + ' ' + b.familyName)
+            );
+            setContacts(sortedContacts);
+            setFilteredContacts(sortedContacts); // Initialize filtered contacts
           })
           .catch(error => {
             console.error('Error fetching contacts', error);
@@ -25,6 +32,21 @@ export default function App() {
       }
     });
   }, []);
+
+  // Filter contacts based on search text
+  const filterContacts = (text) => {
+    setSearchText(text);
+    if (text) {
+      const filtered = contacts.filter(contact => {
+        const contactName = (contact.givenName + ' ' + contact.familyName).toLowerCase();
+        const contactPhone = contact.phoneNumbers.map(phone => phone.number).join(' ');
+        return contactName.includes(text.toLowerCase()) || contactPhone.includes(text);
+      });
+      setFilteredContacts(filtered);
+    } else {
+      setFilteredContacts(contacts);
+    }
+  };
 
   const startCall = () => {
     if (phoneNumber) {
@@ -52,8 +74,14 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Call Record Mate</Text>
+      <TextInput
+        style={styles.searchInput}
+        placeholder="Search by name or phone number"
+        value={searchText}
+        onChangeText={filterContacts}
+      />
       <FlatList
-        data={contacts}
+        data={filteredContacts}
         keyExtractor={item => item.recordID}
         renderItem={({ item }) => (
           <TouchableOpacity onPress={() => selectContact(item)} style={styles.contactItem}>
@@ -69,7 +97,6 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     padding: 16,
     backgroundColor: '#FFFFFF',
   },
@@ -77,6 +104,14 @@ const styles = StyleSheet.create({
     fontSize: 24,
     marginBottom: 16,
     textAlign: 'center',
+    color: '#000',
+  },
+  searchInput: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 16,
+    paddingHorizontal: 8,
     color: '#000',
   },
   contactItem: {

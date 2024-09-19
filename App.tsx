@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { View, Text, TextInput, Button, StyleSheet, FlatList, TouchableOpacity, Animated } from 'react-native';
 import Contacts from 'react-native-contacts';
 import axios from 'axios';
 
@@ -9,6 +9,8 @@ export default function App() {
   const [filteredContacts, setFilteredContacts] = useState([]);
   const [searchText, setSearchText] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [isButtonVisible, setIsButtonVisible] = useState(false); // State to control button visibility
+  const buttonOpacity = useRef(new Animated.Value(0)).current; // Animated value for button opacity
 
   // Fetch contacts on component mount
   useEffect(() => {
@@ -39,13 +41,18 @@ export default function App() {
     if (text) {
       const filtered = contacts.filter(contact => {
         const contactName = (contact.givenName + ' ' + contact.familyName).toLowerCase();
-        const contactPhone = contact.phoneNumbers.map(phone => phone.number).join(' ');
-        return contactName.includes(text.toLowerCase()) || contactPhone.includes(text);
+        const contactPhone = contact.phoneNumbers.map(phone => normalizePhoneNumber(phone.number)).join(' ');
+        return contactName.includes(text.toLowerCase()) || contactPhone.includes(normalizePhoneNumber(text));
       });
       setFilteredContacts(filtered);
     } else {
       setFilteredContacts(contacts);
     }
+  };
+
+  // Normalize phone number by removing non-numeric characters
+  const normalizePhoneNumber = (number) => {
+    return number.replace(/\D/g, ''); // Remove all non-numeric characters
   };
 
   const startCall = () => {
@@ -65,10 +72,21 @@ export default function App() {
   const selectContact = (contact) => {
     // Assuming the first phone number is used
     if (contact.phoneNumbers && contact.phoneNumbers.length > 0) {
-      setPhoneNumber(contact.phoneNumbers[0].number);
+      setPhoneNumber(normalizePhoneNumber(contact.phoneNumbers[0].number));
+      showButton(); // Show the button with animation
     } else {
       alert('Selected contact does not have a phone number');
     }
+  };
+
+  // Show the button with an animation
+  const showButton = () => {
+    setIsButtonVisible(true);
+    Animated.timing(buttonOpacity, {
+      toValue: 1,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
   };
 
   return (
@@ -89,7 +107,11 @@ export default function App() {
           </TouchableOpacity>
         )}
       />
-      <Button title="Start Call" onPress={startCall} />
+      {isButtonVisible && (
+        <Animated.View style={{ opacity: buttonOpacity }}>
+          <Button title="Start Call" onPress={startCall} />
+        </Animated.View>
+      )}
     </View>
   );
 }

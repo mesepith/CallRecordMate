@@ -10,6 +10,7 @@ export default function App() {
   const [searchText, setSearchText] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isButtonVisible, setIsButtonVisible] = useState(false); // State to control button visibility
+  const [selectedContactId, setSelectedContactId] = useState(null); // State to track the selected contact
   const buttonOpacity = useRef(new Animated.Value(0)).current; // Animated value for button opacity
 
   // Fetch contacts on component mount
@@ -73,6 +74,7 @@ export default function App() {
     // Assuming the first phone number is used
     if (contact.phoneNumbers && contact.phoneNumbers.length > 0) {
       setPhoneNumber(normalizePhoneNumber(contact.phoneNumbers[0].number));
+      setSelectedContactId(contact.recordID); // Highlight the selected contact
       showButton(); // Show the button with animation
     } else {
       alert('Selected contact does not have a phone number');
@@ -102,7 +104,13 @@ export default function App() {
         data={filteredContacts}
         keyExtractor={item => item.recordID}
         renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => selectContact(item)} style={styles.contactItem}>
+          <TouchableOpacity
+            onPress={() => selectContact(item)}
+            style={[
+              styles.contactItem,
+              selectedContactId === item.recordID && styles.selectedContactItem, // Apply the selected style
+            ]}
+          >
             <Text style={styles.contactText}>{item.givenName} {item.familyName}</Text>
           </TouchableOpacity>
         )}
@@ -140,6 +148,10 @@ const styles = StyleSheet.create({
     padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
+    backgroundColor: '#fff', // Default background color
+  },
+  selectedContactItem: {
+    backgroundColor: '#d0e8f2', // Highlight color for selected contact
   },
   contactText: {
     fontSize: 18,

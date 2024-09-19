@@ -4,7 +4,7 @@ import Contacts from 'react-native-contacts';
 import axios from 'axios';
 
 export default function App() {
-  const IP = '42.108.74.159'; // Your backend IP
+  const IP = '172.16.4.39:3000'; // Your backend IP
   const [contacts, setContacts] = useState([]);
   const [filteredContacts, setFilteredContacts] = useState([]);
   const [searchText, setSearchText] = useState('');
@@ -65,16 +65,9 @@ const filterContacts = (text) => {
     // Normalize the search text for phone number searching
     const normalizedSearchText = text.replace(/\D/g, '');
 
-    // Debugging: Log search text and normalized search text
-    console.log('Searching for (name):', lowerCaseText);
-    console.log('Searching for (phone):', normalizedSearchText);
-
     const filtered = contacts.filter(contact => {
       // Create a full name by combining givenName and familyName
       const fullName = `${contact.givenName} ${contact.familyName || ''}`.toLowerCase().trim();
-
-      // Debugging: Log the contact name being checked
-      console.log('Checking contact name:', fullName);
 
       // Check if the contact's full name includes the search text
       const nameMatch = fullName.includes(lowerCaseText);
@@ -82,23 +75,12 @@ const filterContacts = (text) => {
       // Normalize phone numbers to remove spaces and other non-numeric characters
       const contactPhoneNumbers = contact.phoneNumbers.map(phone => {
         const normalizedPhone = normalizePhoneNumber(phone.number);
-        
-        // Debugging: Log the normalized phone number
-        console.log('Checking contact phone number:', normalizedPhone);
 
         return normalizedPhone;
       }).join(' ');
 
       // Check if the contact phone numbers include the numeric search text
       const phoneMatch = contactPhoneNumbers.includes(normalizedSearchText);
-
-      // Debugging: Log match results
-      if (nameMatch) {
-        console.log('Name match found:', fullName);
-      }
-      if (phoneMatch) {
-        console.log('Phone match found:', contactPhoneNumbers);
-      }
 
       return nameMatch || (normalizedSearchText !== '' && phoneMatch);
     });
@@ -118,21 +100,25 @@ const normalizePhoneNumber = (number) => {
   return number.replace(/\D/g, ''); // Remove all non-numeric characters
 };
 
-
-
   const startCall = () => {
     if (phoneNumber) {
+      console.log('Attempting to start call to:', phoneNumber);
+      
       axios.post('http://' + IP + '/start-call', { to: phoneNumber })
         .then(response => {
+          console.log('Response from server:', response.data);
           alert('Call started successfully');
         })
         .catch(error => {
+          console.error('Error starting call:', error.message);
+          console.log(error);
           alert('Error starting call: ' + error.message);
         });
     } else {
       alert('Please select a contact to call');
     }
   };
+  
 
   const selectContact = (contact) => {
     // Assuming the first phone number is used

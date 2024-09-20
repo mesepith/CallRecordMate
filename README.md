@@ -8,6 +8,8 @@ For React Native - Environment Setup in Mac follow this (https://zahiralam.com/b
 
 For React Native - Environment Setup in Ubuntu follow this (https://zahiralam.com/blog/how-to-install-android-studio-on-ubuntu-24-04-a-step-by-step-guide/)
 
+Backend of this project <a href="https://github.com/mesepith/call-record-mate-backend?tab=readme-ov-file">CallRecordMate Backend</a>
+
 ## Step 1: Start the Metro Server
 
 First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
@@ -17,9 +19,6 @@ To start Metro, run the following command from the _root_ of your React Native p
 ```bash
 # using npm
 npm start
-
-# OR using Yarn
-yarn start
 ```
 
 ## Step 2: Start your Application
@@ -31,9 +30,6 @@ Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _roo
 ```bash
 # using npm
 npm run android
-
-# OR using Yarn
-yarn android
 ```
 
 ### For iOS
@@ -41,9 +37,6 @@ yarn android
 ```bash
 # using npm
 npm run ios
-
-# OR using Yarn
-yarn ios
 ```
 
 If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.

@@ -50,6 +50,7 @@ We'll need some additional packages for handling calls and making network reques
 ```bash
 # React Native dependencies
 npm install react-native-callkeep axios
+npm install react-native-incall-manager
 
 # iOS-specific setup for react-native-callkeep
 cd ios
